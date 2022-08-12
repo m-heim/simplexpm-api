@@ -33,7 +33,10 @@ int te_change_description(task_entry *entry, char *description) {
     (entry->description)[len] = '\0';
     return 0;
 }
-int te_change_priority(task_entry *entry, task_priority priority);
+int te_change_priority(task_entry *entry, task_priority priority) {
+    entry->priority = priority;
+    return 0;
+}
 int te_change_task_type(task_entry *entry, task_type type);
 int te_add_child(task_entry *entry, task_entry *child);
 int te_remove_child(task_entry *entry, task_entry *child);
