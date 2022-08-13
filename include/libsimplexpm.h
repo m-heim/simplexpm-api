@@ -1,34 +1,55 @@
-typedef enum task_type {
-    epic,
-    feature,
-    task,
-    issue
-} task_type;
+#ifndef LIBSIMPLEXPM_H
+#define LIBSIMPLEXPM_H
+#include <time.h>
+#define SP_ARRAY_DEFAULT_SIZE 10
+enum sp_task_type {
+    PROJECT_TYPE,
+    EPIC_TYPE,
+    FEATURE_TYPE,
+    TASK_TYPE,
+    ISSUE_TYPE,
+    UNKNOWN_TYPE,
+};
 
-typedef enum task_priority {
-    urgent,
-    high,
-    medium,
-    low
-} task_priority;
+enum sp_task_priority {
+    URGENT_PRIORITY,
+    HIGH_PRIORITY,
+    MEDIUM_PRIORITY,
+    LOW_PRIORITY,
+    UNKNOWN_PRIORITY
+};
 
-typedef struct task_entry task_entry;
-typedef struct task_entry {
+struct sp_task_entry {
     char *name;
     char *description;
     int priority;
-    task_type type;
-    task_entry **children;
-    task_entry *parent;
-} task_entry;
+    enum sp_task_type type;
+    struct sp_user **assignees;
+    size_t assignees_used;
+    size_t assignees_size;
+    struct sp_task_entry **children;
+    size_t children_used;
+    size_t children_size;
+    struct sp_task_entry *parent;
+    time_t creation;
+    time_t due;
+};
 
-task_entry *te_make();
+struct sp_user {
+    char *name;
+};
 
-int te_change_name(task_entry *entry, char *name);
-int te_change_description(task_entry *entry, char *description);
-int te_change_priority(task_entry *entry, task_priority priority);
-int te_change_task_type(task_entry *entry, task_type type);
-int te_add_child(task_entry *entry, task_entry *child);
-int te_remove_child(task_entry *entry, task_entry *child);
-int te_change_parent(task_entry *entry, task_entry *parent);
-int te_clean_tree(task_entry *entry);
+struct sp_task_entry *sp_te_make();
+
+int sp_te_change_name(struct sp_task_entry *entry, char *name);
+int sp_te_change_description(struct sp_task_entry *entry, char *description);
+int sp_te_change_priority(struct sp_task_entry *entry, enum sp_task_priority priority);
+int sp_te_change_task_type(struct sp_task_entry *entry, enum sp_task_type type);
+int sp_te_add_child(struct sp_task_entry *entry, struct sp_task_entry *child);
+int sp_te_remove_child(struct sp_task_entry *entry, struct sp_task_entry *child);
+int sp_te_change_parent(struct sp_task_entry *entry, struct sp_task_entry *parent);
+int sp_te_clean_tree(struct sp_task_entry *entry);
+
+void sp_internal_error(char *error, int status);
+
+#endif
