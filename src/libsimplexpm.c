@@ -58,6 +58,7 @@ int sp_te_change_task_type(struct sp_task_entry *entry,
                            enum sp_task_type type) {
   if (type < PROJECT_TYPE || type > UNKNOWN_TYPE) {
     sp_internal_error("couldn't change type", 1);
+    return;
   }
   entry->type = type;
   return 0;
